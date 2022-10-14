@@ -59,6 +59,7 @@ router.get('/Productos-Adidas', async(req, res) => {
     })
   }
 });
+
 // Get filter solo mostrar zapatillas para hombres
 router.get('/Productos-Nike', async(req, res) => {
   try {
@@ -72,6 +73,7 @@ router.get('/Productos-Nike', async(req, res) => {
     })
   }
 });
+
 // Get filter solo mostrar zapatillas para hombres
 router.get('/Productos-Puma', async(req, res) => {
   try {
@@ -85,6 +87,7 @@ router.get('/Productos-Puma', async(req, res) => {
     })
   }
 });
+
 // Get filter solo mostrar zapatillas para hombres
 router.get('/Productos-Fila', async(req, res) => {
   try {
@@ -98,15 +101,47 @@ router.get('/Productos-Fila', async(req, res) => {
     })
   }
 });
-/*************** POST ********************/ 
-// Agregar una nota
-router.post('/Nuevo-Producto', async(req, res) => {
-  const body = req.body;  
-  try {
-    const notaDB = await Productos.create(body);
-    res.status(200).json(notaDB); 
-  } catch (error) {
-    return res.status(500).json({
+
+// Get busqueda de algun producto en la base de datos
+router.get('/Productos-Buscar/:buscar', async(req, res) => {
+  try{
+    const buscar = req.params.buscar;
+    const zapatilla = await Productos.find();
+    const zapatillasBuscar = zapatilla.filter(zapatilla => zapatilla.nombre===buscar);
+    res.json(zapatillasBuscar);
+  }catch(error){
+    return res.status(400).json({
+      mensaje: 'Ocurrio un error',
+      error
+    })
+  }
+});
+
+// Get, obtiene todos los productos segun su tipo 
+router.get('/Productos-FilterTipo/:tipo', async(req, res) => {
+  try{
+    const tipo = req.params.tipo;
+    const zapatilla = await Productos.find();
+    const zapatillasFiltroTipo = zapatilla.filter(zapatilla => zapatilla.tipo===tipo);
+    res.json(zapatillasFiltroTipo);
+  }catch(error){
+    return res.status(400).json({
+      mensaje: 'Ocurrio un error',
+      error
+    })
+  }
+});
+
+// Get, obtiene todos los productos dentro de un rango de precio 
+router.get('/Productos-FilterPrecio/:precio', async(req, res) => {
+  try{
+    const precioIngresado = req.params.precio;
+    const precio = parseFloat(precioIngresado)
+    const zapatilla = await Productos.find();
+    const zapatillasFiltroPrecio = zapatilla.filter(zapatilla => zapatilla.precio<precio);
+    res.json(zapatillasFiltroPrecio);
+  }catch(error){
+    return res.status(400).json({
       mensaje: 'Ocurrio un error',
       error
     })
@@ -127,18 +162,35 @@ router.get('/EZ-Producto', async(req, res) => {
   }
 });
 
-// Delete eliminar una nota
+/*************** POST ********************/ 
+// Agregar una nota
+router.post('/Nuevo-Producto', async(req, res) => {
+  const body = req.body;  
+  try {
+    const notaDB = await Productos.create(body);
+    console.log("Producto creado")
+    res.status(200).json(notaDB); 
+  } catch (error) {
+    return res.status(500).json({
+      mensaje: 'Ocurrio un error',
+      error
+    })
+  }
+});
+
+/*************** Eliminar ********************/ 
 router.delete('/Producto-el/:id', async(req, res) => {
   const _id = req.params.id;
   try {
-    const notaDb = await Productos.findByIdAndDelete({_id});
-    if(!notaDb){
+    const productoEliminar = await Productos.findByIdAndDelete({_id});
+    if(!productoEliminar){
       return res.status(400).json({
         mensaje: 'No se encontró el id indicado',
         error
       })
     }
-    res.json(notaDb);  
+    console.log("SE BORRO EL PRODUCTO")
+    res.json(productoEliminar);  
   } catch (error) {
     return res.status(400).json({
       mensaje: 'Ocurrio un error',
@@ -147,6 +199,7 @@ router.delete('/Producto-el/:id', async(req, res) => {
   }
 });
 
+/*************** Actualizar ********************/ 
 // Put actualizar una nota
 router.put('/Producto-ac/:id', async(req, res) => {
   const _id = req.params.id;
