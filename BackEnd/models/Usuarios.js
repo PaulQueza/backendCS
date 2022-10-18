@@ -9,8 +9,10 @@ const notaSchema = new Schema({
   contrasena: { type: String,required: [true, 'Nombre obligatorio']},
   direccion: String,
   region: String,
-  ciudad: String,
-  nombre: String
+  comuna: String,
+  nombre: String,
+  provincia: String,
+  codigopostal:Number,
 });
 
 // Convertir a modelo
