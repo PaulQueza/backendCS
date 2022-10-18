@@ -2,12 +2,17 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const notaSchema = new Schema({
-  edad: {type: String, required: [true, 'Nombre obligatorio']},
+  edad: String,
   telefono: String,
-  correo: String,
-  nombreUsuario: String,
+  correo: { type: String,required: [true, 'Nombre obligatorio']},
+  nombreUsuario: { type: String,required: [true, 'Nombre obligatorio']},
   contrasena: { type: String,required: [true, 'Nombre obligatorio']},
-  direccion: String
+  direccion: String,
+  region: String,
+  comuna: String,
+  nombre: String,
+  provincia: String,
+  codigopostal:Number,
 });
 
 // Convertir a modelo
