@@ -13,6 +13,7 @@ const notaSchema = new Schema({
   nombre: String,
   provincia: String,
   codigopostal:Number,
+  nombre:String
 });
 
 // Convertir a modelo
